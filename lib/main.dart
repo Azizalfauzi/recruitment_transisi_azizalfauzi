@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:recruitment_transisi_azizalfauzi/cubit/api/login_cubit/login_cubit.dart';
 import 'package:recruitment_transisi_azizalfauzi/views/pages/pages.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'cubit/cubit/routes_cubit.dart';
+import 'cubit/routes/routes_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +19,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => RoutesCubit(),
+        ),
+        BlocProvider(
+          create: (_) => LoginCubit(),
         ),
       ],
       child: MaterialApp(

@@ -167,18 +167,92 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       width: double.infinity,
       height: MyUtility(context).height / 15,
-      child: ElevatedButton(
-        style: style,
-        onPressed: () {
-          // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-          context.read<RoutesCubit>().emit(RoutesHome());
+      child: BlocConsumer<LoginCubit, LoginState>(
+        listener: (context, state) {
+          if (state is LoginSuccess) {
+            Flushbar(
+              duration: const Duration(milliseconds: 3000),
+              flushbarPosition: FlushbarPosition.TOP,
+              backgroundColor: Colors.green,
+              titleText: Text(
+                'Success Login',
+                style: whiteTextStyleInter.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              messageText: Text(
+                'Berhasil melakukan login',
+                style: whiteTextStyleInter.copyWith(
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ).show(context);
+            // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+            // context.read<RoutesCubit>().emit(RoutesDashboardPage());
+          } else if (state is LoginFailed) {
+            Flushbar(
+              duration: const Duration(milliseconds: 3000),
+              flushbarPosition: FlushbarPosition.TOP,
+              backgroundColor: Colors.red,
+              titleText: Text(
+                'Gagal Login',
+                style: whiteTextStyleInter.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              messageText: Text(
+                state.message,
+                style: whiteTextStyleInter.copyWith(
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ).show(context);
+          }
         },
-        child: Text(
-          'Login',
-          style: whiteTextStyleInter.copyWith(
-            fontSize: 16,
-          ),
-        ),
+        builder: (context, state) {
+          if (state is LoginLoading) {
+            return Center(
+              child: SpinKitFadingCircle(
+                color: Colors.blue[900],
+                size: 50,
+              ),
+            );
+          }
+          return ElevatedButton(
+            style: style,
+            onPressed: () async {
+              if (emailController.text == "" || passwordController.text == "") {
+                Flushbar(
+                  duration: const Duration(milliseconds: 3000),
+                  flushbarPosition: FlushbarPosition.TOP,
+                  backgroundColor: Colors.red,
+                  titleText: Text(
+                    'Ada form kosong!',
+                    style: whiteTextStyleInter.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  messageText: Text(
+                    'Lakukan pengisian form dengan benar',
+                    style: whiteTextStyleInter.copyWith(
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ).show(context);
+              } else {
+                context
+                    .read<LoginCubit>()
+                    .loginApp(emailController.text, passwordController.text);
+              }
+            },
+            child: Text(
+              'Login',
+              style: whiteTextStyleInter.copyWith(
+                fontSize: 16,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

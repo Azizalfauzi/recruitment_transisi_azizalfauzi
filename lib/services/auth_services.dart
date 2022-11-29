@@ -1,32 +1,41 @@
 part of 'services.dart';
 
 class AuthServices {
-  static Future<LoginModel> authLogin(String email, String password) async {
-    Map<String, dynamic> loginData = {
-      'codeEvent': email,
-      'password': password,
-    };
-    final reponse = await Dio().post('$urlTransisi/api/login',
-        data: loginData,
-        options: Options(
-            contentType: Headers.formUrlEncodedContentType,
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            }));
+  static Future<LoginModel> loginApp(
+    String email,
+    String password,
+  ) async {
+    String apiURL = "${urlTransisi}api/login";
 
-    final json = reponse.data;
-    if (reponse.statusCode == 200) {
-      LoginModel loginResult = LoginModel.fromJson(json);
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString('token', loginResult.token);
-      return loginResult;
-    } else if (reponse.statusCode == 401) {
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    };
+
+    var body = json.encode({
+      "email": email,
+      "password": password,
+    });
+
+    var apiResult = await http.post(
+      Uri.parse(apiURL),
+      headers: headers,
+      body: body,
+    );
+
+    if (apiResult.statusCode == 200) {
+      var response = json.decode(apiResult.body);
+      LoginModel result = LoginModel.fromJson(response);
+      // SharedPreferences preferences = await SharedPreferences.getInstance();
+      // preferences.setString('token', result.token);
+      return result;
+    } else if (apiResult.statusCode == 400) {
+      return throw Exception("User tidak ditemukan!");
+    } else if (apiResult.statusCode == 401) {
       return throw Exception("Password salah!");
-    } else if (reponse.statusCode == 404) {
-      return throw Exception("Kode tidak valid!");
     } else {
-      return throw Exception("Ada kesalahan pada server");
+      return throw Exception(
+          'Ada kesalahan pada server!\nGagal melakukan login!');
     }
   }
 
@@ -34,8 +43,5 @@ class AuthServices {
   static Future<void> signOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove('token');
-    preferences.remove('id');
-    preferences.remove('kode_event');
-    preferences.remove('name_event');
   }
 }
