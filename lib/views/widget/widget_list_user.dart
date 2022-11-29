@@ -8,7 +8,7 @@ class WidgetListUser extends StatelessWidget {
     return const Card(
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: Colors.teal,
+          backgroundColor: Color(0xff3F51B5),
           child: Text('A'),
         ),
         title: Text('Hello World ListTile'),

@@ -7,13 +7,17 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue[900],
         title: Text(
           'Contacts',
           style: whiteTextStyleInter,
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+              context.read<RoutesCubit>().emit(const RoutesDetail("1"));
+            },
             icon: const Icon(Icons.search),
           ),
         ],
@@ -22,6 +26,13 @@ class HomePage extends StatelessWidget {
         children: const <Widget>[
           WidgetListUser(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.read<RoutesCubit>().emit(RoutesCreate());
+        },
+        backgroundColor: Colors.blue[900],
+        child: const Icon(Icons.add),
       ),
     );
   }
