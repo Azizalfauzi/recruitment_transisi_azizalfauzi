@@ -8,6 +8,31 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    _checkStatusPageToken();
+    super.initState();
+  }
+
+  Future<void> _checkStatusPageToken() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? token = preferences.getString('token');
+
+    if (token != null) {
+      var duration = const Duration(milliseconds: 500);
+      Timer(duration, () {
+        // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+        context.read<RoutesCubit>().emit(RoutesHome());
+      });
+    } else {
+      var duration = const Duration(milliseconds: 500);
+      Timer(duration, () {
+        // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+        context.read<RoutesCubit>().emit(RoutesLogin());
+      });
+    }
+  }
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _obscureText = true;
@@ -189,6 +214,8 @@ class _LoginPageState extends State<LoginPage> {
             ).show(context);
             // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
             context.read<RoutesCubit>().emit(RoutesHome());
+            emailController.text = "";
+            passwordController.text = "";
           } else if (state is LoginFailed) {
             Flushbar(
               duration: const Duration(milliseconds: 3000),

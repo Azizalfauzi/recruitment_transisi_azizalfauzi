@@ -27,40 +27,46 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () {
               // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-              // context.read<RoutesCubit>().emit(const RoutesDetail("1"));
+              context.read<LoginCubit>().logout();
+              context.read<RoutesCubit>().emit(RoutesLogin());
             },
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.logout),
           ),
         ],
       ),
-      body: BlocBuilder<ListUserCubit, ListUserState>(
-        builder: (context, state) {
-          if (state is ListUserLoading) {
-            return Center(
-              child: SpinKitFadingCircle(
-                color: Colors.blue[900],
-                size: 50,
-              ),
-            );
-          } else if (state is ListUserGetSuccess) {
-            return ListView(
-              scrollDirection: Axis.vertical,
-              children: state.result
-                  .map((e) => WidgetListUser(
-                        id: e.id,
-                        firstname: e.firstName,
-                        lastname: e.lastName,
-                        email: e.email,
-                        avatar: e.avatar,
-                      ))
-                  .toList(),
-            );
-          } else {
-            return const Center(
-              child: Text('Data Kosong!'),
-            );
-          }
-        },
+      body: DoubleBackToCloseApp(
+        snackBar: const SnackBar(
+          content: Text('Tap back again to leave'),
+        ),
+        child: BlocBuilder<ListUserCubit, ListUserState>(
+          builder: (context, state) {
+            if (state is ListUserLoading) {
+              return Center(
+                child: SpinKitFadingCircle(
+                  color: Colors.blue[900],
+                  size: 50,
+                ),
+              );
+            } else if (state is ListUserGetSuccess) {
+              return ListView(
+                scrollDirection: Axis.vertical,
+                children: state.result
+                    .map((e) => WidgetListUser(
+                          id: e.id,
+                          firstname: e.firstName,
+                          lastname: e.lastName,
+                          email: e.email,
+                          avatar: e.avatar,
+                        ))
+                    .toList(),
+              );
+            } else {
+              return const Center(
+                child: Text('Data Kosong!'),
+              );
+            }
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

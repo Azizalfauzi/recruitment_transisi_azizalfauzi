@@ -17,4 +17,8 @@ class LoginCubit extends Cubit<LoginState> {
       emit(LoginFailed(e.toString()));
     }
   }
+
+  void logout() {
+    AuthServices.signOut();
+  }
 }

@@ -26,8 +26,8 @@ class AuthServices {
     if (apiResult.statusCode == 200) {
       var response = json.decode(apiResult.body);
       LoginModel result = LoginModel.fromJson(response);
-      // SharedPreferences preferences = await SharedPreferences.getInstance();
-      // preferences.setString('token', result.token);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString('token', result.token);
       return result;
     } else if (apiResult.statusCode == 400) {
       return throw Exception("User tidak ditemukan!");

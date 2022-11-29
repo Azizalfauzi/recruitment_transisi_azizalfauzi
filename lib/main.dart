@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recruitment_transisi_azizalfauzi/cubit/api/create_user/create_user_cubit.dart';
 import 'package:recruitment_transisi_azizalfauzi/cubit/api/get_user/get_user_cubit.dart';
 import 'package:recruitment_transisi_azizalfauzi/cubit/api/list_user/list_user_cubit.dart';
 import 'package:recruitment_transisi_azizalfauzi/cubit/api/login_cubit/login_cubit.dart';
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => ListUserCubit(),
+        ),
+        BlocProvider(
+          create: (_) => CreateUserCubit(),
         ),
       ],
       child: MaterialApp(
