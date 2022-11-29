@@ -1,7 +1,7 @@
 part of 'pages.dart';
 
 class DetailPage extends StatefulWidget {
-  final String id;
+  final int id;
   const DetailPage({Key? key, required this.id}) : super(key: key);
 
   @override
@@ -9,6 +9,12 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  @override
+  void initState() {
+    context.read<GetUserCubit>().getUser(widget.id);
+    return super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -18,20 +24,36 @@ class _DetailPageState extends State<DetailPage> {
         return false;
       },
       child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            header(),
-            content(),
-            content(),
-          ],
+        body: BlocBuilder<GetUserCubit, GetUserState>(
+          builder: (context, state) {
+            if (state is GetUserLoading) {
+              return Center(
+                child: SpinKitFadingCircle(
+                  color: Colors.blue[900],
+                  size: 50,
+                ),
+              );
+            } else if (state is GetUserSuccess) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  header(state.result.firstName, state.result.avatar),
+                  content(state.result.email),
+                ],
+              );
+            } else {
+              return const Center(
+                child: Text('Data Kosong!'),
+              );
+            }
+          },
         ),
       ),
     );
   }
 
-  Widget header() {
+  Widget header(String firstname, String avatar) {
     return Container(
       width: double.infinity,
       height: MyUtility(context).height / 2.7,
@@ -75,16 +97,15 @@ class _DetailPageState extends State<DetailPage> {
           ),
           Column(
             children: [
-              IconButton(
-                iconSize:  MyUtility(context).height / 10,
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
+              SizedBox(
+                height: MyUtility(context).height / 10,
+                width: MyUtility(context).height / 10,
+                child: CircleAvatar(
+                    backgroundColor: Colors.blue[900],
+                    child: Image.network(avatar)),
               ),
               Text(
-                'Nama User',
+                firstname,
                 style: whiteTextStyleInter.copyWith(
                     fontSize: 20, fontWeight: regular),
               ),
@@ -95,13 +116,13 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  Widget content() {
-    return const Card(
+  Widget content(String email) {
+    return Card(
       child: ListTile(
-        leading: Icon(Icons.phone, color: Color(0xff3F51B5)),
-        title: Text('Hello World ListTile'),
-        subtitle: Text('Here is a second line'),
-        trailing: Icon(Icons.message),
+        leading: const Icon(Icons.email, color: Color(0xff3F51B5)),
+        title: Text(email),
+        subtitle: const Text('E-mail'),
+        trailing: const Icon(Icons.message),
       ),
     );
   }

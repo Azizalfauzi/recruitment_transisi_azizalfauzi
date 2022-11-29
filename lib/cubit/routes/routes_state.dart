@@ -17,7 +17,7 @@ class RoutesHome extends RoutesState {
 }
 
 class RoutesDetail extends RoutesState {
-  final String id;
+  final int id;
   const RoutesDetail(this.id);
   @override
   List<Object> get props => [id];

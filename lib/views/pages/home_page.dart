@@ -1,7 +1,18 @@
 part of 'pages.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    context.read<ListUserCubit>().getUserList();
+    return super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,16 +27,40 @@ class HomePage extends StatelessWidget {
           IconButton(
             onPressed: () {
               // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-              context.read<RoutesCubit>().emit(const RoutesDetail("1"));
+              // context.read<RoutesCubit>().emit(const RoutesDetail("1"));
             },
             icon: const Icon(Icons.search),
           ),
         ],
       ),
-      body: ListView(
-        children: const <Widget>[
-          WidgetListUser(),
-        ],
+      body: BlocBuilder<ListUserCubit, ListUserState>(
+        builder: (context, state) {
+          if (state is ListUserLoading) {
+            return Center(
+              child: SpinKitFadingCircle(
+                color: Colors.blue[900],
+                size: 50,
+              ),
+            );
+          } else if (state is ListUserGetSuccess) {
+            return ListView(
+              scrollDirection: Axis.vertical,
+              children: state.result
+                  .map((e) => WidgetListUser(
+                        id: e.id,
+                        firstname: e.firstName,
+                        lastname: e.lastName,
+                        email: e.email,
+                        avatar: e.avatar,
+                      ))
+                  .toList(),
+            );
+          } else {
+            return const Center(
+              child: Text('Data Kosong!'),
+            );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

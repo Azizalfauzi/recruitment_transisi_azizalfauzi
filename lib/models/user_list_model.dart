@@ -1,7 +1,7 @@
 part of 'models.dart';
 
-class UserModel {
-  UserModel({
+class UserListModel {
+  UserListModel({
     required this.id,
     required this.email,
     required this.firstName,
@@ -15,7 +15,7 @@ class UserModel {
   String lastName;
   String avatar;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+  factory UserListModel.fromJson(Map<String, dynamic> json) => UserListModel(
         id: json["id"],
         email: json["email"],
         firstName: json["first_name"],
@@ -32,8 +32,8 @@ class UserModel {
       };
 }
 
-class SupportUser {
-  SupportUser({
+class Support {
+  Support({
     required this.url,
     required this.text,
   });
@@ -41,7 +41,7 @@ class SupportUser {
   String url;
   String text;
 
-  factory SupportUser.fromJson(Map<String, dynamic> json) => SupportUser(
+  factory Support.fromJson(Map<String, dynamic> json) => Support(
         url: json["url"],
         text: json["text"],
       );

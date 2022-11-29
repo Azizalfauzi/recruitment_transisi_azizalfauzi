@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:recruitment_transisi_azizalfauzi/cubit/api/get_user/get_user_cubit.dart';
+import 'package:recruitment_transisi_azizalfauzi/cubit/api/list_user/list_user_cubit.dart';
 import 'package:recruitment_transisi_azizalfauzi/cubit/api/login_cubit/login_cubit.dart';
 import 'package:recruitment_transisi_azizalfauzi/views/pages/pages.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +24,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => LoginCubit(),
+        ),
+        BlocProvider(
+          create: (_) => GetUserCubit(),
+        ),
+        BlocProvider(
+          create: (_) => ListUserCubit(),
         ),
       ],
       child: MaterialApp(

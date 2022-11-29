@@ -12,7 +12,7 @@ class RoutesCubit extends Cubit<RoutesState> {
     }else if(state is RoutesHome){
       emit(RoutesHome());
     } else if (state is RoutesDetail) {
-      String id = '';
+      int id = 0;
       emit(RoutesDetail(id));
     } else if (state is RoutesCreate) {
       emit(RoutesCreate());

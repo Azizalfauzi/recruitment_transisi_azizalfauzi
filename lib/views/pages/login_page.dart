@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ).show(context);
             // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-            // context.read<RoutesCubit>().emit(RoutesDashboardPage());
+            context.read<RoutesCubit>().emit(RoutesHome());
           } else if (state is LoginFailed) {
             Flushbar(
               duration: const Duration(milliseconds: 3000),
